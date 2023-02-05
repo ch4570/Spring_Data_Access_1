@@ -1,4 +1,4 @@
-package hello.jdbc.repository.ex;
+package hello.jdbc.repository;
 
 import hello.jdbc.connection.DBConnectionUtil;
 import hello.jdbc.domain.Member;
@@ -73,7 +73,7 @@ public class MemberRepositoryV4_2 implements MemberRepository {
                 throw new NoSuchElementException("member not found memberId = " + memberId);
             }
         } catch (SQLException e) {
-            throw new MyDbException(e);
+            throw exTranslator.translate("findById", sql, e);
         } finally {
             close(con, pstmt, rs);
         }
@@ -96,7 +96,7 @@ public class MemberRepositoryV4_2 implements MemberRepository {
             log.info("resultSize = {}", resultSize);
         } catch (SQLException e) {
             log.error("db error", e);
-            throw new MyDbException(e);
+            throw exTranslator.translate("update", sql, e);
         } finally {
             close(con, pstmt, null);
         }
@@ -119,7 +119,7 @@ public class MemberRepositoryV4_2 implements MemberRepository {
             int resultSize = pstmt.executeUpdate();
             log.info("resultSize = {}", resultSize);
         } catch (SQLException e) {
-            throw new MyDbException(e);
+            throw exTranslator.translate("delete", sql, e);
         } finally {
             close(con, pstmt, null);
         }
